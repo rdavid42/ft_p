@@ -53,13 +53,24 @@ int				handle_client(int cs)
 	int						r;
 	char					buf[1024];
 
-	while ((r = read(cs, buf, 1023)) > 0)
+	while (42)
 	{
+		r = recv(cs, buf, 1023, 0);
+		if (r == -1)
+			error("Recv error !\n");
+		else if (!r)
+			return (!write(2, "Connection closed !\n", 20));
 		buf[r] = '\0';
-		dprintf(2, "%s\n", buf);
+		(void)write(2, "Message received !\n", 19);
+		if ((send(cs, buf, slen(buf), 0)) == -1)
+		{
+			write(2, "Failed to send message back !\n", 30);
+			close(cs);
+			return (0);
+		}
+		write(2, "Message being sent...\n", 22);
 	}
-	if (r == -1)
-		return (0);
+	close(cs);
 	return (1);
 }
 
