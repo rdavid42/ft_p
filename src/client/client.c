@@ -7,28 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-
-void			usage(char *s)
-{
-	printf("Usage: %s <addr> <port>\n", s);
-	exit(-1);
-}
-
-int				slen(char const *s)
-{
-	int			i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-int				error(char const *msg)
-{
-	(void)write(2, msg, slen(msg));
-	exit(-1);
-}
+#include "shared.h"
 
 int				create_client(char *addr, int port)
 {
@@ -48,19 +27,33 @@ int				create_client(char *addr, int port)
 	return (sock);
 }
 
+void			interpret_command(int sock, char *cmd)
+{
+	if (!scmp(cmd, "quit", 6))
+	{
+		close(sock);
+		free(cmd);
+		exit(0);
+	}
+}
+
 int				loop(int sock)
 {
+	char		*cmd;
 	char		buf[1024];
 	int			r;
 
 	while (42)
 	{
 		write(1, "% ", 2);
-		r = read(0, buf, 1023);
-		if (r == -1)
+		if ((r = read(0, buf, 1023) == -1))
 			return (0);
 		buf[r] = '\0';
-		if (send(sock, buf, slen(buf), 0) == -1)
+		cmd = clean_line(buf);
+		printf("%s\n", cmd);
+		interpret_command(sock, cmd);
+		free(cmd);
+		/*if (send(sock, buf, slen(buf), 0) == -1)
 		{
 			close(sock);
 			error("Failed to send message !\n");
@@ -79,7 +72,7 @@ int				loop(int sock)
 				printf("Connexion closed !\n");
 				break;
 			}
-		}
+		}*/
 	}
 	return (1);
 }

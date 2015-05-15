@@ -6,28 +6,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
-void			usage(char *s)
-{
-	dprintf(2, "Usage: %s <port>\n", s);
-	exit(-1);
-}
-
-int				slen(char const *s)
-{
-	int			i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-int				error(char const *msg)
-{
-	(void)write(2, msg, slen(msg));
-	exit(-1);
-}
+#include "shared.h"
 
 int				create_server(int port)
 {
