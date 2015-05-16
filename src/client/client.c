@@ -45,7 +45,8 @@ int				loop(int sock)
 
 	while (42)
 	{
-		write(1, "% ", 2);
+		if (write(1, "% ", 2) == -1)
+			return (0);
 		if ((r = read(0, buf, 1023) == -1))
 			return (0);
 		buf[r] = '\0';

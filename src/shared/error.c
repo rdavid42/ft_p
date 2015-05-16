@@ -5,6 +5,7 @@
 
 int				error(char const *msg)
 {
-	(void)write(2, msg, slen(msg));
+	if (write(2, msg, slen(msg)) == -1)
+		exit(-1);
 	exit(-1);
 }

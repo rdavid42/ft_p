@@ -38,16 +38,13 @@ int				handle_client(int cs)
 		if (r == -1)
 			error("Recv error !\n");
 		else if (!r)
-			return (!write(2, "Connection closed !\n", 20));
+			return (!printf("Connection closed !\n"));
 		buf[r] = '\0';
-		(void)write(2, "Message received !\n", 19);
 		if ((send(cs, buf, slen(buf), 0)) == -1)
 		{
-			write(2, "Failed to send message back !\n", 30);
 			close(cs);
 			return (0);
 		}
-		write(2, "Message being sent...\n", 22);
 	}
 	close(cs);
 	return (1);
