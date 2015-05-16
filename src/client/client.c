@@ -47,8 +47,10 @@ void			interpret_ls(int *sock, char *cmd)
 		close(*sock), error("ERROR\n");
 	else
 	{
-		while (bufset(buf), (r = read(*sock, buf, BUFS - 1)) != 0)
+		while (42)
 		{
+			bufset(buf);
+			r = recv(*sock, buf, BUFS - 1, 0);
 			if (r == -1)
 				close(*sock), error("ERROR: failed to receive data\n");
 			else if (!r)
