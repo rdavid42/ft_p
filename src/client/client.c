@@ -22,7 +22,10 @@ int				create_client(char *addr, int port)
 	sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port); // host to network short
-	sin.sin_addr.s_addr = inet_addr(addr);
+	if (!scmp(addr, "localhost", 9))
+		sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+	else
+		sin.sin_addr.s_addr = inet_addr(addr);
 	if (connect(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
 		error("Connect error !\n");
 	return (sock);
@@ -93,8 +96,8 @@ void			interpret_pwd(int *sock, char *cmd)
 
 void			interpret_quit(int *sock, char *cmd)
 {
-	(void)sock;
 	(void)cmd;
+	close(*sock);
 	exit(0);
 }
 
