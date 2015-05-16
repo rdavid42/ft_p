@@ -29,12 +29,21 @@ int				create_client(char *addr, int port)
 
 void			interpret_command(int sock, char *cmd)
 {
-	if (!scmp(cmd, "quit", 6))
+	if (!scmp(cmd, "quit", 4))
 	{
 		close(sock);
 		free(cmd);
 		exit(0);
 	}
+}
+
+void			bufset(char *buf, int const size)
+{
+	int			i;
+
+	i = -1;
+	while (++i < size)
+		buf[i] = '\0';
 }
 
 int				loop(int sock)
@@ -47,11 +56,11 @@ int				loop(int sock)
 	{
 		if (write(1, "% ", 2) == -1)
 			return (0);
-		if ((r = read(0, buf, 1023) == -1))
+		bufset(buf, 1024);
+		if ((r = read(0, buf, 1024) == -1))
 			return (0);
-		buf[r] = '\0';
 		cmd = clean_line(buf);
-		printf("%s\n", cmd);
+		printf("new: |%s|\n", cmd);
 		interpret_command(sock, cmd);
 		free(cmd);
 		/*if (send(sock, buf, slen(buf), 0) == -1)

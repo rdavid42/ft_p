@@ -40,6 +40,7 @@ int				handle_client(int cs)
 		else if (!r)
 			return (!printf("Connection closed !\n"));
 		buf[r] = '\0';
+		printf("%s\n", buf);
 		if ((send(cs, buf, slen(buf), 0)) == -1)
 		{
 			close(cs);

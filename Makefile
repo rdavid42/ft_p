@@ -25,10 +25,10 @@ CLIENT					=	client
 all: $(SERVER) $(CLIENT)
 
 $(SERVER): $(SHARED_OBJ) $(SERVER_OBJ)
-	$(CC) $(SERVER_OBJ) $(SHARED_OBJ) $(FLAGS) $(INCLUDE) -o $(SERVER)
+	@$(CC) $(SERVER_OBJ) $(SHARED_OBJ) $(FLAGS) $(INCLUDE) -o $(SERVER)
 
 $(CLIENT): $(SHARED_OBJ) $(CLIENT_OBJ)
-	$(CC) $(CLIENT_OBJ) $(SHARED_OBJ) $(FLAGS) $(INCLUDE) -o $(CLIENT)
+	@$(CC) $(CLIENT_OBJ) $(SHARED_OBJ) $(FLAGS) $(INCLUDE) -o $(CLIENT)
 
 $(patsubst %, $(SERVER_OBJ_PATH)%,%.o): $(SERVER_SRC_PATH)$(notdir %.c)
 	@mkdir -p $(SERVER_OBJ_PATH)
@@ -43,9 +43,7 @@ $(patsubst %, $(SHARED_OBJ_PATH)%,%.o): $(SHARED_SRC_PATH)$(notdir %.c)
 	@$(CC) -c $(FLAGS) $(INCLUDE) "$<" -o "$@"
 
 clean:
-	@rm -rf $(SERVER_OBJ_PATH)
-	@rm -rf $(CLIENT_OBJ_PATH)
-	@rm -rf $(SHARED_OBJ_PATH)
+	@rm -rf $(OBJ_PATH)
 
 fclean: clean
 	@rm -rf $(OBJ_PATH)

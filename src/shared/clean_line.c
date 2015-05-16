@@ -1,62 +1,77 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "shared.h"
 
-static int		count_chars(char *line)
+inline static int		sep(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n');
+}
+
+static int				count_chars(char *line)
 {
 	int			i;
-	int			count;
+	int			size;
 
 	i = 0;
-	count = 0;
+	size = 0;
 	while (line[i])
 	{
-		if (line[i] != ' ' && line[i] != '\t')
-			count++;
-		if (line[i] == ' ' || line[i] == '\t')
+		if (!sep(line[i]))
+			size++;
+		else
 		{
-			count++;
-			while (line[i] == ' ' || line[i] == '\t')
+			if (!i)
+				i++;
+			else
+				size++;
+			while (sep(line[i]))
 				i++;
 			i--;
 		}
 		i++;
 	}
-	return (count);
+	return (size);
 }
 
-static void		switch_char(char *old, char *new)
+static void				switch_char(char *old, char *new, int const size)
 {
-	int			i;
-	int			j;
+	int					i;
+	int					j;
 
 	i = 0;
 	j = -1;
 	while (old[i])
 	{
-		if (old[i] != ' ' && old[i] != '\t')
+		if (!sep(old[i]))
 			new[++j] = old[i];
-		if (old[i] == ' ' || old[i] == '\t')
+		else
 		{
-			new[++j] = ' ';
-			while (old[i] == ' ' || old[i] == '\t')
+			if (!i)
+				i++;
+			else
+				new[++j] = ' ';
+			while (sep(old[i]))
 				i++;
 			i--;
 		}
 		i++;
 	}
+	if (new[size - 1] == ' ')
+		new[size - 1] = '\0';
 }
 
-char			*clean_line(char *old)
+char					*clean_line(char *old)
 {
-	char		*new;
-	int			count;
+	char				*new;
+	int					size;
 
 	new = NULL;
-	count = count_chars(old);
-	if (!(new = (char *)malloc(sizeof(char) * count + 1)))
+	size = 0;
+	size = count_chars(old);
+	if (!(new = (char *)malloc(sizeof(char) * size + 1)))
 		return (NULL);
-	switch_char(old, new);
-	new[count] = '\0';
+	switch_char(old, new, size);
+	new[size] = '\0';
 	return (new);
 }
