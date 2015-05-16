@@ -6,6 +6,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 #include "shared.h"
 
 int				create_server(int port)
@@ -27,25 +28,60 @@ int				create_server(int port)
 	return (sock);
 }
 
+void			interpret_ls(int cs, char *cmd)
+{
+	pid_t					pid;
+	pid_t					tpid;
+
+	pid = fork();
+	if (pid == -1)
+		error("Fork error !\n");
+	if (pid == 0)
+	{
+		dup2(cs, 0), dup2(cs, 1), dup2(cs, 2);
+		execv("/bin/ls", ssplit(cmd, ' '));
+	}
+	else
+	{
+		tpid = wait4(pid, NULL, 0, NULL);
+		while (tpid != pid)
+			tpid = wait4(pid, NULL, 0, NULL);
+		write(cs, "\0", 1);
+	}
+}
+
+inline static void		bufset(char *buf)
+{
+	int			i;
+
+	i = -1;
+	while (++i < BUFS)
+		buf[i] = '\0';
+}
+
 int				handle_client(int cs)
 {
 	int						r;
-	char					buf[1024];
+	char					buf[BUFS];
 
 	while (42)
 	{
-		r = recv(cs, buf, 1023, 0);
+		bufset(buf);
+		r = recv(cs, buf, BUFS - 1, 0);
 		if (r == -1)
-			error("Recv error !\n");
+			error("Read error !\n");
 		else if (!r)
-			return (!printf("Connection closed !\n"));
+			return (!write(2, "Connection closed !\n", 20));
 		buf[r] = '\0';
-		printf("%s\n", buf);
+		if (!scmp(buf, "ls", 2))
+			interpret_ls(cs, buf);
+/*		printf("%s\n", buf);
 		if ((send(cs, buf, slen(buf), 0)) == -1)
 		{
+			write(2, "Error sending results!\n", 23);
 			close(cs);
 			return (0);
-		}
+		}*/
 	}
 	close(cs);
 	return (1);

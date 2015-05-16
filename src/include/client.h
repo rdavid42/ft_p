@@ -7,7 +7,7 @@ typedef struct			s_cmd
 {
 	int					len;
 	char const			*name;
-	void				(*func)(int *);
+	void				(*interpret)(int *, char *cmd);
 }						t_cmd;
 
 void					usage(char *s);

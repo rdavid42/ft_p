@@ -28,33 +28,71 @@ int				create_client(char *addr, int port)
 	return (sock);
 }
 
-void			interpret_ls(int *sock)
+inline static void		bufset(char *buf)
 {
-	printf("ls\n");
+	int			i;
+
+	i = -1;
+	while (++i < BUFS)
+		buf[i] = '\0';
 }
 
-void			interpret_cd(int *sock)
+void			interpret_ls(int *sock, char *cmd)
 {
+	int				r;
+	char			buf[BUFS];
+	int const		cmd_size = slen(cmd);
+
+	if (write(*sock, cmd, cmd_size) == -1)
+		close(*sock), error("ERROR\n");
+	else
+	{
+		while (bufset(buf), (r = read(*sock, buf, BUFS - 1)) != 0)
+		{
+			if (r == -1)
+				close(*sock), error("ERROR: failed to receive data\n");
+			else if (!r)
+				error("ERROR: Connexion closed!\n");
+			if (!buf[0])
+				break;
+			write(1, buf, slen(buf));
+		}
+		write(1, "SUCCESS\n", 9);
+	}
+}
+
+void			interpret_cd(int *sock, char *cmd)
+{
+	(void)sock;
+	(void)cmd;
 	printf("cd\n");
 }
 
-void			interpret_get(int *sock)
+void			interpret_get(int *sock, char *cmd)
 {
+	(void)sock;
+	(void)cmd;
 	printf("get\n");
 }
 
-void			interpret_put(int *sock)
+void			interpret_put(int *sock, char *cmd)
 {
+	(void)sock;
+	(void)cmd;
 	printf("put\n");
 }
 
-void			interpret_pwd(int *sock)
+void			interpret_pwd(int *sock, char *cmd)
 {
+	(void)sock;
+	(void)cmd;
 	printf("pwd\n");
 }
 
-void			interpret_quit(int *sock)
+void			interpret_quit(int *sock, char *cmd)
 {
+	(void)sock;
+	(void)cmd;
 	exit(0);
 }
 
@@ -74,39 +112,33 @@ void			interpret_command(int sock, char *cmd)
 	i = -1;
 	while (++i < CMDS)
 	{
-		if (!scmp(cmds[i].name, cmd, cmds[i].len))
+		if (!scmp(cmds[i].name, cmd, cmds[i].len)
+			&& (cmd[cmds[i].len] == ' ' || !cmd[cmds[i].len]))
 		{
-			cmds[i].func(&sock);
-			break;
+			cmds[i].interpret(&sock, cmd);
+			return;
 		}
 	}
-}
-
-void			bufset(char *buf, int const size)
-{
-	int			i;
-
-	i = -1;
-	while (++i < size)
-		buf[i] = '\0';
+	printf("ftp: command not found: %s\n", cmd);
 }
 
 int				loop(int sock)
 {
 	char		*cmd;
-	char		buf[1024];
+	char		buf[BUFS];
 	int			r;
 
 	while (42)
 	{
 		if (write(1, "% ", 2) == -1)
 			return (0);
-		bufset(buf, 1024);
-		if ((r = read(0, buf, 1024) == -1))
+		bufset(buf);
+		if ((r = read(0, buf, BUFS - 1) == -1))
 			return (0);
 		cmd = clean_line(buf);
 		interpret_command(sock, cmd);
 		free(cmd);
+		cmd = NULL;
 		/*if (send(sock, buf, slen(buf), 0) == -1)
 		{
 			close(sock);
