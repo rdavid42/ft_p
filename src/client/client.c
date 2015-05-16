@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include "client.h"
 #include "shared.h"
 
 int				create_client(char *addr, int port)
@@ -27,13 +28,57 @@ int				create_client(char *addr, int port)
 	return (sock);
 }
 
+void			interpret_ls(int *sock)
+{
+	printf("ls\n");
+}
+
+void			interpret_cd(int *sock)
+{
+	printf("cd\n");
+}
+
+void			interpret_get(int *sock)
+{
+	printf("get\n");
+}
+
+void			interpret_put(int *sock)
+{
+	printf("put\n");
+}
+
+void			interpret_pwd(int *sock)
+{
+	printf("pwd\n");
+}
+
+void			interpret_quit(int *sock)
+{
+	exit(0);
+}
+
 void			interpret_command(int sock, char *cmd)
 {
-	if (!scmp(cmd, "quit", 4))
+	int						i;
+	static t_cmd const		cmds[CMDS] =
 	{
-		close(sock);
-		free(cmd);
-		exit(0);
+		{ 2, "ls", interpret_ls },
+		{ 2, "cd", interpret_cd },
+		{ 3, "get", interpret_get },
+		{ 3, "put", interpret_put },
+		{ 3, "pwd", interpret_pwd },
+		{ 4, "quit", interpret_quit }
+	};
+
+	i = -1;
+	while (++i < CMDS)
+	{
+		if (!scmp(cmds[i].name, cmd, cmds[i].len))
+		{
+			cmds[i].func(&sock);
+			break;
+		}
 	}
 }
 
@@ -60,7 +105,6 @@ int				loop(int sock)
 		if ((r = read(0, buf, 1024) == -1))
 			return (0);
 		cmd = clean_line(buf);
-		printf("new: |%s|\n", cmd);
 		interpret_command(sock, cmd);
 		free(cmd);
 		/*if (send(sock, buf, slen(buf), 0) == -1)
