@@ -29,7 +29,7 @@ int				create_server(int port)
 	return (sock);
 }
 
-void			interpret_ls(int cs, char *cmd)
+int				interpret_ls(int cs, char *cmd)
 {
 	pid_t					pid;
 	pid_t					tpid;
@@ -50,9 +50,10 @@ void			interpret_ls(int cs, char *cmd)
 		write(cs, "\0", 1);
 		printf("Sent ls results to client %d\n", cs);
 	}
+	return (1);
 }
 
-void			interpret_get(int cs, char *cmd)
+int				interpret_get(int cs, char *cmd)
 {
 	char		**cmd_args;
 	char		*file;
@@ -60,19 +61,14 @@ void			interpret_get(int cs, char *cmd)
 
 	cmd_args = ssplit(cmd, ' ');
 	if (!(file = read_file(cmd_args[1])))
-	{
-		afree(cmd_args);
-		return ;
-	}
+		return (afree(cmd_args), write(cs, "\0", 1), 0);
 	len = slen(file);
-	if (write(cs, file, len) == -1)
-	{
-		afree(cmd_args);
-		return ;
-	}
+	if (send(cs, file, len + 1, 0) == -1)
+		return (afree(cmd_args), 0);
+	send(cs, "\0", 1, 0);
 	printf("Sent %d bytes to client %d\n", len, cs);
 	afree(cmd_args);
-	write(cs, "\0", 1);
+	return (1);
 }
 
 inline static void		bufset(char *buf)

@@ -44,7 +44,7 @@ inline static void		bufset(char *buf)
 	}
 }
 
-void			interpret_ls(int *sock, char *cmd)
+int				interpret_ls(int *sock, char *cmd)
 {
 	int				r;
 	char			buf[BUFS];
@@ -68,16 +68,18 @@ void			interpret_ls(int *sock, char *cmd)
 		}
 		write(1, "SUCCESS\n", 9);
 	}
+	return (1);
 }
 
-void			interpret_cd(int *sock, char *cmd)
+int				interpret_cd(int *sock, char *cmd)
 {
 	(void)sock;
 	(void)cmd;
 	printf("cd\n");
+	return (1);
 }
 
-void			interpret_get(int *sock, char *cmd)
+int				interpret_get(int *sock, char *cmd)
 {
 	int const		cmd_size = slen(cmd);
 	char			buf[BUFS];
@@ -89,15 +91,13 @@ void			interpret_get(int *sock, char *cmd)
 
 	cmd_args = ssplit(cmd, ' ');
 	if (alen(cmd_args) <= 1)
-	{
-		afree(cmd_args), printf(ARG_ERR);
-		return ;
-	}
+		return (afree(cmd_args), printf(ARG_ERR1), 0);
+	if (alen(cmd_args) > 2)
+		return (afree(cmd_args), printf(ARG_ERR2), 0);
+	if ((fd = open(cmd_args[1], O_RDONLY, 0644)) != -1)
+		return (afree(cmd_args), printf(FILE_EXIST), 0);
 	if ((fd = open(cmd_args[1], O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
-	{
-		afree(cmd_args), printf(OPEN_ERR);
-		return ;
-	}
+		return (afree(cmd_args), printf(OPEN_ERR), 0);
 	if (write(*sock, cmd, cmd_size) == -1)
 		afree(cmd_args), close(*sock), error(REQ_ERR);
 	else
@@ -116,32 +116,41 @@ void			interpret_get(int *sock, char *cmd)
 			len = slen(buf);
 			bytes += len;
 			write(fd, buf, len);
+			if (len < BUFS - 1)
+				break;
 		}
 		close(fd);
-		printf("SUCCESS: received %d bytes from server\n", bytes);
+		if (!bytes)
+			printf("ERROR: retrieved empty file!\n");
+		else
+			printf("SUCCESS: received %d bytes from server\n", bytes);
 		afree(cmd_args);
 	}
+	return (1);
 }
 
-void			interpret_put(int *sock, char *cmd)
+int				interpret_put(int *sock, char *cmd)
 {
 	(void)sock;
 	(void)cmd;
 	printf("put\n");
+	return (1);
 }
 
-void			interpret_pwd(int *sock, char *cmd)
+int				interpret_pwd(int *sock, char *cmd)
 {
 	(void)sock;
 	(void)cmd;
 	printf("pwd\n");
+	return (1);
 }
 
-void			interpret_quit(int *sock, char *cmd)
+int				interpret_quit(int *sock, char *cmd)
 {
 	(void)cmd;
 	close(*sock);
 	exit(0);
+	return (1);
 }
 
 void			interpret_command(int sock, char *cmd)

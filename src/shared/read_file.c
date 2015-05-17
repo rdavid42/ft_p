@@ -12,14 +12,14 @@ static int		file_size(char const *filename)
 	char		buf[READ_BUFS];
 
 	if ((fd = open(filename, O_RDONLY, 0644)) == -1)
-		return (print_error("Could not open file !\n", -1));
+		return (print_error("Failed to open file !\n", -1));
 	count = 0;
 	while ((ret = read(fd, buf, READ_BUFS)) != 0)
 	{
 		if (ret == -1)
 		{
 			close(fd);
-			return (print_error("Could not read file !\n", -1));
+			return (print_error("Failed to read file !\n", -1));
 		}
 		count += ret;
 	}
@@ -47,18 +47,18 @@ char			*read_file(char const *filename)
 	char		*file;
 
 	if ((size = file_size(filename)) == -1)
-		return (print_error_p("Could not get file size !\n"));
+		return (NULL);
 	if (!(file = (char *)malloc(sizeof(char) * size + 1)))
-		return (print_error_p("Could not allocate memory !\n"));
+		return (print_error_p("Failed to allocate memory !\n"));
 	if ((fd = open(filename, O_RDONLY, 0644)) == -1)
-		return (print_error_p("Could not open file !\n"));
+		return (print_error_p("Failed open file !\n"));
 	i[1] = 0;
 	while ((i[0] = read(fd, buf, READ_BUFS)) != 0)
 	{
 		if (i[0] == -1)
 		{
 			close(fd);
-			return (print_error_p("Could not read file !\n"));
+			return (print_error_p("Failed to read file !\n"));
 		}
 		copy_file_chunk(file, buf, &i[0], &i[1]);
 	}
