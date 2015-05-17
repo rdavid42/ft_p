@@ -1,38 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   quit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 17:49:30 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 19:11:05 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/17 19:05:06 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 19:10:20 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <fcntl.h>
-#include "client.h"
-#include "shared.h"
 
-int				main(int ac, char **av)
+int				quit(int *sock, char *cmd)
 {
-	int						sock;
-	int						port;
-
-	if (ac != 3)
-		usage(av[0]);
-	port = stoi(av[2]);
-	sock = create_client(av[1], port);
-	if (!client_loop(sock))
-		return (0);
-	close(sock);
+	(void)cmd;
+	close(*sock);
+	exit(0);
 	return (1);
 }

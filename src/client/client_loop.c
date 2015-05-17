@@ -1,38 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_loop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 17:49:30 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 19:11:05 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/17 19:07:08 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 19:08:46 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <fcntl.h>
 #include "client.h"
 #include "shared.h"
 
-int				main(int ac, char **av)
+inline static void		bufset(char *buf, size_t bufs)
 {
-	int						sock;
-	int						port;
+	size_t		i;
 
-	if (ac != 3)
-		usage(av[0]);
-	port = stoi(av[2]);
-	sock = create_client(av[1], port);
-	if (!client_loop(sock))
-		return (0);
-	close(sock);
+	i = 0;
+	while (i < bufs)
+	{
+		buf[i] = '\0';
+		i++;
+	}
+}
+
+int						client_loop(int sock)
+{
+	char				*cmd;
+	char				buf[BUFS];
+	int					r;
+
+	while (42)
+	{
+		if (write(1, "% ", 2) == -1)
+			return (0);
+		bufset(buf, BUFS);
+		if ((r = read(0, buf, BUFS - 1) == -1))
+			return (0);
+		cmd = clean_line(buf);
+		interpret_command(sock, cmd);
+		free(cmd);
+		cmd = NULL;
+	}
 	return (1);
 }
