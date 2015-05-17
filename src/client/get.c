@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:35:37 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:43:40 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ inline static void	bufset(char *buf, size_t bufs)
 static int			check_errors(char **cmd_args, int *fd)
 {
 	if (alen(cmd_args) <= 1)
-		return (afree(cmd_args), printf(ARG_ERR1), 0);
+		return (afree(cmd_args), err_msg(ARG_ERR1), 0);
 	if (alen(cmd_args) > 2)
-		return (afree(cmd_args), printf(ARG_ERR2), 0);
+		return (afree(cmd_args), err_msg(ARG_ERR2), 0);
 	if ((*fd = open(cmd_args[1], O_RDONLY, 0644)) != -1)
-		return (afree(cmd_args), printf(FILE_EXIST), 0);
+		return (afree(cmd_args), err_msg(FILE_EXIST), 0);
 	if ((*fd = open(cmd_args[1], O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
-		return (afree(cmd_args), printf(OPEN_ERR), 0);
+		return (afree(cmd_args), err_msg(OPEN_ERR), 0);
 	return (1);
 }
 
@@ -74,10 +74,10 @@ static int			receive_file_header(int *sock, int fd,
 		afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
 	else if (!r)
 		afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
-	if (len == -1)
-		return (printf(FILE_NOT_FOUND), 0);
-	if (len == -2)
-		return (printf(FILE_DENIED), 0);
+	if (*len == -1)
+		return (err_msg(FILE_NOT_FOUND), 0);
+	if (*len == -2)
+		return (err_msg(FILE_DENIED), 0);
 	return (1);
 }
 

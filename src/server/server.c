@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:26:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:34:51 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:40:52 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,56 +38,6 @@ int				create_server(int port)
 		error(BIND_ERR);
 	listen(sock, 42);
 	return (sock);
-}
-
-int				ls(int cs, char *cmd)
-{
-	pid_t					pid;
-	pid_t					tpid;
-
-	pid = fork();
-	if (pid == -1)
-		error("Fork error !\n");
-	if (pid == 0)
-	{
-		dup2(cs, 0), dup2(cs, 1), dup2(cs, 2);
-		execv("/bin/ls", ssplit(cmd, ' '));
-	}
-	else
-	{
-		tpid = wait4(pid, NULL, 0, NULL);
-		while (tpid != pid)
-			tpid = wait4(pid, NULL, 0, NULL);
-		write(cs, "\0", 1);
-		printf("Sent ls results to client %d\n", cs);
-	}
-	return (1);
-}
-
-int				get(int cs, char *cmd)
-{
-	char		**cmd_args;
-	char		*file;
-	int			len;
-	int			i;
-	int			t;
-
-	cmd_args = ssplit(cmd, ' ');
-	if (!(file = read_file(cmd_args[1], &len)))
-		return (afree(cmd_args), write(cs, "\0", 1), 0);
-	if (send(cs, (void *)&len, sizeof(len), 0) == -1)
-		return (afree(cmd_args), 0);
-	i = 0;
-	while (i < len)
-	{
-		t = len - i < GET_BUFS ? len - i : GET_BUFS;
-		if (send(cs, file + i, t, 0) == -1)
-			return (afree(cmd_args), 0);
-		i += GET_BUFS;
-	}
-	printf("Sent %d bytes to client %d\n", len, cs);
-	afree(cmd_args);
-	return (1);
 }
 
 inline static void		bufset(char *buf)

@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:18:57 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:38:10 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,6 @@ int				print_error(char const *msg, int const code);
 void			*print_error_p(char const *msg);
 char			*read_file(char const *filename, int *len);
 int				stoi(const char *str);
+void			err_msg(char const *msg);
 
 #endif
