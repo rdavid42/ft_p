@@ -3,6 +3,6 @@
 
 # define BIND_ERR			("ERROR: failed to bind!\n")
 
-void			usage(char *s);
+void						usage(char *s);
 
 #endif

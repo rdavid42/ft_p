@@ -21,7 +21,7 @@ int				create_server(int port)
 		return (-1);
 	sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
 	sin.sin_family = AF_INET;
-	sin.sin_port = htons(port); // host to network short
+	sin.sin_port = htons(port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
 		error(BIND_ERR);
@@ -115,7 +115,7 @@ int				main(int ac, char **av)
 
 	if (ac != 2)
 		usage(av[0]);
-	port = atoi(av[1]);
+	port = stoi(av[1]);
 	sock = create_server(port);
 	while (42)
 	{

@@ -18,5 +18,6 @@ void			afree(char **array);
 int				print_error(char const *msg, int const code);
 void			*print_error_p(char const *msg);
 char			*read_file(char const *filename);
+int				stoi(const char *str);
 
 #endif

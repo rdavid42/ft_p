@@ -227,7 +227,7 @@ int				main(int ac, char **av)
 
 	if (ac != 3)
 		usage(av[0]);
-	port = atoi(av[2]);
+	port = stoi(av[2]);
 	sock = create_client(av[1], port);
 	if (!loop(sock))
 		return (0);

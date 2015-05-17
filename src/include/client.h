@@ -12,15 +12,15 @@
 # define FILE_EXIST			("ERROR: file already exists!\n")
 # define LOCALHOST_ADDR		("127.0.0.1")
 
-# define CMDS			(6)
+# define CMDS				(6)
 
-typedef struct			s_cmd
+typedef struct				s_cmd
 {
-	int					len;
-	char const			*name;
-	int					(*interpret)(int *, char *cmd);
-}						t_cmd;
+	int						len;
+	char const				*name;
+	int						(*interpret)(int *, char *cmd);
+}							t_cmd;
 
-void					usage(char *s);
+void						usage(char *s);
 
 #endif
