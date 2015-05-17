@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 19:28:18 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 19:40:41 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static int			receive_file_header(int *sock, char **cmd_args, int *len)
 	if (*len == -1)
 		return (err_msg(FILE_NOT_FOUND), 0);
 	if (*len == -2)
-		return (err_msg(FILE_DENIED), 0);
+		return (err_msg(PERM_DENIED), 0);
 	return (1);
 }
 

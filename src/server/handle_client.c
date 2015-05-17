@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:50:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:51:43 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 20:39:26 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,18 @@ inline static void			bufset(char *buf)
 		buf[i] = '\0';
 }
 
-int							handle_client(int cs)
+int							interpret_command(char *root, int *cs, char *cmd)
+{
+	if (!scmp(cmd, "ls", 2))
+		ls(cs, cmd);
+	else if (!scmp(cmd, "get", 3))
+		get(cs, cmd);
+	else if (!scmp(cmd, "cd", 2))
+		cd(root, cs, cmd);
+	return (1);
+}
+
+int							handle_client(char *root, int cs)
 {
 	int						r;
 	char					buf[BUFS];
@@ -40,10 +51,7 @@ int							handle_client(int cs)
 		else if (!r)
 			return (close(cs), printf("Connexion to client %d closed!\n", cs));
 		buf[r] = '\0';
-		if (!scmp(buf, "ls", 2))
-			ls(cs, buf);
-		else if (!scmp(buf, "get", 3))
-			get(cs, buf);
+		interpret_command(root, &cs, buf);
 	}
 	close(cs);
 	return (1);

@@ -1,30 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   sjoin.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 17:26:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 20:07:05 by rdavid           ###   ########.fr       */
+/*   Created: 2015/04/19 13:44:26 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 20:39:18 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <unistd.h>
-#include "server.h"
 #include "shared.h"
 
-int				main(int ac, char **av)
+char			*sjoin(char const *s, char const *s2)
 {
-	int						port;
-	int						sock;
+	char		*str;
+	size_t		i;
+	size_t		j;
+	size_t		len;
 
-	if (ac != 2)
-		usage(av[0]);
-	port = stoi(av[1]);
-	sock = create_server(port);
-	server_loop(sock);
-	close(sock);
-	return (1);
+	i = 0;
+	j = 0;
+	len = slen(s) + slen(s2);
+	if (!(str = (char *)malloc(sizeof(char) * len + 1)))
+		return (NULL);
+	if (s == NULL || s2 == NULL)
+		return (NULL);
+	while (s[i] != '\0')
+	{
+		str[i] = s[i];
+		i++;
+	}
+	while (s2[j] != '\0')
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	return (str);
 }
