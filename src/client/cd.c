@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:03:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 21:24:24 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 23:51:18 by ryd              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int				cd(int *sock, char *cmd)
 			error(CO_CLOSED);
 		if (ret == -1)
 			return (err_msg(PERM_DENIED), 0);
-		write(1, "SUCCESS\n", 9);
+		(void)!write(1, "SUCCESS\n", 9);
 	}
 	return (1);
 }

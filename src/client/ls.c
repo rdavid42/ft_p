@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ls.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:51:57 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 19:38:04 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/18 00:03:20 by ryd              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ int						ls(int *sock, char *cmd)
 				error(CO_CLOSED);
 			if (!buf[0])
 				break ;
-			write(1, buf, slen(buf));
+			(void)!write(1, buf, slen(buf));
 		}
-		write(1, "SUCCESS\n", 9);
+		(void)!write(1, "SUCCESS\n", 9);
 	}
 	return (1);
 }

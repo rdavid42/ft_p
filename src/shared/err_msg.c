@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   err_msg.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:36:42 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:57:08 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 23:49:21 by ryd              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,6 @@
 
 void				err_msg(char const *msg)
 {
-	write(2, msg, slen(msg));
+	if (write(2, msg, slen(msg)) == -1)
+		return ;
 }

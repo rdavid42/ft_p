@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ls.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:30 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 20:10:38 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 23:50:49 by ryd              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int				ls(int *cs, char *cmd)
 		tpid = wait4(pid, NULL, 0, NULL);
 		while (tpid != pid)
 			tpid = wait4(pid, NULL, 0, NULL);
-		write(*cs, "\0", 1);
+		(void)!write(*cs, "\0", 1);
 		printf("Sent ls results to client %d\n", *cs);
 	}
 	return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpret_command.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:05:30 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 19:11:41 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/18 00:06:10 by ryd              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 void			interpret_command(int sock, char *cmd)
 {
 	int						i;
-	static t_cmd const		cmds[CMDS] =
+	static t_cmd const		cmds[CMDS] = {
 
-	{ { 2, "ls", ls },
+	{ 2, "ls", ls },
 	{ 2, "cd", cd },
 	{ 3, "get", get },
 	{ 3, "put", put },

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 19:40:41 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 23:51:51 by ryd              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int			write_streaming_packets(int *sock, int fd,
 			afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
 		else if (!r)
 			afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
-		write(fd, c, *len - i < GET_BUFS ? *len - i : GET_BUFS);
+		(void)!write(fd, c, *len - i < GET_BUFS ? *len - i : GET_BUFS);
 		i += GET_BUFS;
 	}
 	return (1);
