@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:46:38 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 19:28:18 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ static int			check_errors(char **cmd_args, int *fd)
 		return (afree(cmd_args), err_msg(ARG_ERR2), 0);
 	if ((*fd = open(cmd_args[1], O_RDONLY, 0644)) != -1)
 		return (afree(cmd_args), err_msg(FILE_EXIST), 0);
-	if ((*fd = open(cmd_args[1], O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
-		return (afree(cmd_args), err_msg(OPEN_ERR), 0);
 	return (1);
 }
 
@@ -64,16 +62,15 @@ static int			write_streaming_packets(int *sock, int fd,
 	return (1);
 }
 
-static int			receive_file_header(int *sock, int fd,
-									char **cmd_args, int *len)
+static int			receive_file_header(int *sock, char **cmd_args, int *len)
 {
 	int				r;
 
 	r = recv(*sock, (void *)len, sizeof(int), 0);
 	if (r == -1)
-		afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
+		afree(cmd_args), close(*sock), error(REC_ERR);
 	else if (!r)
-		afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
+		afree(cmd_args), close(*sock), error(CO_CLOSED);
 	if (*len == -1)
 		return (err_msg(FILE_NOT_FOUND), 0);
 	if (*len == -2)
@@ -95,8 +92,10 @@ int					get(int *sock, char *cmd)
 		afree(cmd_args), close(fd), close(*sock), error(REQ_ERR);
 	else
 	{
-		if (!receive_file_header(sock, fd, cmd_args, &len))
+		if (!receive_file_header(sock, cmd_args, &len))
 			return (afree(cmd_args), 0);
+		if ((fd = open(cmd_args[1], O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
+			return (afree(cmd_args), err_msg(OPEN_ERR), 0);
 		write_streaming_packets(sock, fd, cmd_args, &len);
 		close(fd);
 		printf("SUCCESS: received %d bytes from server\n", len);
