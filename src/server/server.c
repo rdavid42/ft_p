@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:26:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:18:06 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:34:51 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int				get(int cs, char *cmd)
 	cmd_args = ssplit(cmd, ' ');
 	if (!(file = read_file(cmd_args[1], &len)))
 		return (afree(cmd_args), write(cs, "\0", 1), 0);
-	printf("%d bytes\n", len);
 	if (send(cs, (void *)&len, sizeof(len), 0) == -1)
 		return (afree(cmd_args), 0);
 	i = 0;

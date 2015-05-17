@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:50:18 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 17:59:18 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:30:02 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # define ARG_ERR2			("ERROR: too many arguments!\n")
 # define CMD_NOT_FOUND		("ERROR: command not found: %s\n")
 # define FILE_EXIST			("ERROR: file already exists!\n")
+# define FILE_NOT_FOUND		("ERROR: file not found!\n")
+# define FILE_DENIED		("ERROR: permission denied!\n")
 # define LOCALHOST_ADDR		("127.0.0.1")
 
 # define CMDS				(6)
