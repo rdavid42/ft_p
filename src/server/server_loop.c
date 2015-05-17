@@ -1,30 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_loop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 17:26:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:57:37 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/17 18:53:52 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 18:56:51 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include "server.h"
 #include "shared.h"
 
-int				main(int ac, char **av)
+int				server_loop(int sock)
 {
-	int						port;
-	int						sock;
+	int						cs;
+	pid_t					pid;
+	struct sockaddr_in		csin;
+	unsigned int			cslen;
 
-	if (ac != 2)
-		usage(av[0]);
-	port = stoi(av[1]);
-	sock = create_server(port);
-	server_loop(sock);
-	close(sock);
-	return (1);
+	while (42)
+	{
+		if ((cs = accept(sock, (struct sockaddr *)&csin, &cslen)) == -1)
+			return (0);
+		pid = fork();
+		if (pid == -1)
+			error("Fork error !\n");
+		if (pid == 0)
+		{
+			close(sock);
+			handle_client(cs);
+			exit(0);
+		}
+	}
 }

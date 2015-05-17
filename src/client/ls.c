@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:51:57 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:02:24 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:58:40 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ inline static void		bufset(char *buf, size_t bufs)
 	}
 }
 
-int					ls(int *sock, char *cmd)
+int						ls(int *sock, char *cmd)
 {
-	int				r;
-	char			buf[BUFS];
-	int const		cmd_size = slen(cmd);
+	int					r;
+	char				buf[BUFS];
+	int const			cmd_size = slen(cmd);
 
 	if (write(*sock, cmd, cmd_size) == -1)
 		close(*sock), error(REQ_ERR);
@@ -46,7 +46,7 @@ int					ls(int *sock, char *cmd)
 			else if (!r)
 				error(CO_CLOSED);
 			if (!buf[0])
-				break;
+				break ;
 			write(1, buf, slen(buf));
 		}
 		write(1, "SUCCESS\n", 9);

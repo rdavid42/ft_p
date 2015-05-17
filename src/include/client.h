@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:50:18 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:30:02 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 18:59:41 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ typedef struct				s_cmd
 void						usage(char *s);
 int							ls(int *sock, char *cmd);
 int							get(int *sock, char *cmd);
+int							create_client(char *addr, int port);
 
 #endif
