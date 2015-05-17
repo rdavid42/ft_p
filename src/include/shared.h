@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shared.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 17:53:56 by rdavid           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SHARED_H
 # define SHARED_H
 
 # define READ_BUFS		16384
 # define BUFS			16384
+# define GET_BUFS		512
 
 # include <stddef.h>
 
@@ -17,7 +30,7 @@ int				alen(char **array);
 void			afree(char **array);
 int				print_error(char const *msg, int const code);
 void			*print_error_p(char const *msg);
-char			*read_file(char const *filename);
+char			*read_file(char const *filename, int *len);
 int				stoi(const char *str);
 
 #endif

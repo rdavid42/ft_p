@@ -1,4 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_file.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/05/17 15:16:30 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 17:53:19 by rdavid           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -38,7 +50,7 @@ void			copy_file_chunk(char *file, char *buf,
 	*offset += *size;
 }
 
-char			*read_file(char const *filename)
+char			*read_file(char const *filename, int *len)
 {
 	int			size;
 	int			fd;
@@ -48,6 +60,8 @@ char			*read_file(char const *filename)
 
 	if ((size = file_size(filename)) == -1)
 		return (NULL);
+	if (len != NULL)
+		*len = size;
 	if (!(file = (char *)malloc(sizeof(char) * size + 1)))
 		return (print_error_p("Failed to allocate memory !\n"));
 	if ((fd = open(filename, O_RDONLY, 0644)) == -1)
@@ -56,13 +70,8 @@ char			*read_file(char const *filename)
 	while ((i[0] = read(fd, buf, READ_BUFS)) != 0)
 	{
 		if (i[0] == -1)
-		{
-			close(fd);
-			return (print_error_p("Failed to read file !\n"));
-		}
+			return (close(fd), print_error_p("Failed to read file !\n"));
 		copy_file_chunk(file, buf, &i[0], &i[1]);
 	}
-	file[i[1]] = '\0';
-	close(fd);
-	return (file);
+	return (file[i[1]] = '\0', close(fd), file);
 }

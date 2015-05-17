@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/05/17 17:50:18 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 17:59:18 by rdavid           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CLIENT_H
 # define CLIENT_H
 
@@ -22,5 +34,7 @@ typedef struct				s_cmd
 }							t_cmd;
 
 void						usage(char *s);
+int							ls(int *sock, char *cmd);
+int							get(int *sock, char *cmd);
 
 #endif

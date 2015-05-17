@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/05/17 17:26:07 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/17 18:16:35 by rdavid           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +40,7 @@ int				create_server(int port)
 	return (sock);
 }
 
-int				interpret_ls(int cs, char *cmd)
+int				ls(int cs, char *cmd)
 {
 	pid_t					pid;
 	pid_t					tpid;
@@ -53,19 +64,28 @@ int				interpret_ls(int cs, char *cmd)
 	return (1);
 }
 
-int				interpret_get(int cs, char *cmd)
+int				get(int cs, char *cmd)
 {
 	char		**cmd_args;
 	char		*file;
 	int			len;
+	int			i;
+	int			t;
 
 	cmd_args = ssplit(cmd, ' ');
-	if (!(file = read_file(cmd_args[1])))
+	if (!(file = read_file(cmd_args[1], &len)))
 		return (afree(cmd_args), write(cs, "\0", 1), 0);
-	len = slen(file);
-	if (send(cs, file, len + 1, 0) == -1)
+	printf("%d bytes\n", len);
+	if (send(cs, (void *)&len, sizeof(len), 0) == -1)
 		return (afree(cmd_args), 0);
-	send(cs, "\0", 1, 0);
+	i = 0;
+	while (i < len)
+	{
+		t = len - i < GET_BUFS ? len - i : GET_BUFS;
+		if (send(cs, file + i, t, 0) == -1)
+			return (afree(cmd_args), 0);
+		i += GET_BUFS;
+	}
 	printf("Sent %d bytes to client %d\n", len, cs);
 	afree(cmd_args);
 	return (1);
@@ -96,9 +116,9 @@ int				handle_client(int cs)
 			return (close(cs), printf("Connexion to client %d closed!\n", cs));
 		buf[r] = '\0';
 		if (!scmp(buf, "ls", 2))
-			interpret_ls(cs, buf);
+			ls(cs, buf);
 		else if (!scmp(buf, "get", 3))
-			interpret_get(cs, buf);
+			get(cs, buf);
 	}
 	close(cs);
 	return (1);
