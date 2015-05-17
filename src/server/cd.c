@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:44:06 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 21:42:22 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 21:43:09 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ inline static char		*get_cwd(void)
 	return (getcwd(buf, 1024));
 }
 
-void					go_up(char *root)
+static void				go_up(char *root)
 {
 	(void)root;
 }
