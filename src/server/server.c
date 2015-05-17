@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include "server.h"
 #include "shared.h"
 
 int				create_server(int port)
@@ -23,7 +24,7 @@ int				create_server(int port)
 	sin.sin_port = htons(port); // host to network short
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
-		error("Bind error !\n");
+		error(BIND_ERR);
 	listen(sock, 42);
 	return (sock);
 }
@@ -47,7 +48,31 @@ void			interpret_ls(int cs, char *cmd)
 		while (tpid != pid)
 			tpid = wait4(pid, NULL, 0, NULL);
 		write(cs, "\0", 1);
+		printf("Sent ls results to client %d\n", cs);
 	}
+}
+
+void			interpret_get(int cs, char *cmd)
+{
+	char		**cmd_args;
+	char		*file;
+	int			len;
+
+	cmd_args = ssplit(cmd, ' ');
+	if (!(file = read_file(cmd_args[1])))
+	{
+		afree(cmd_args);
+		return ;
+	}
+	len = slen(file);
+	if (write(cs, file, len) == -1)
+	{
+		afree(cmd_args);
+		return ;
+	}
+	printf("Sent %d bytes to client %d\n", len, cs);
+	afree(cmd_args);
+	write(cs, "\0", 1);
 }
 
 inline static void		bufset(char *buf)
@@ -64,24 +89,20 @@ int				handle_client(int cs)
 	int						r;
 	char					buf[BUFS];
 
+	printf("Connexion to client %d established!\n", cs);
 	while (42)
 	{
 		bufset(buf);
 		r = recv(cs, buf, BUFS - 1, 0);
 		if (r == -1)
-			error("Read error !\n");
+			close(cs), error("Read error !\n");
 		else if (!r)
-			return (!write(2, "Connection closed !\n", 20));
+			return (close(cs), printf("Connexion to client %d closed!\n", cs));
 		buf[r] = '\0';
 		if (!scmp(buf, "ls", 2))
 			interpret_ls(cs, buf);
-/*		printf("%s\n", buf);
-		if ((send(cs, buf, slen(buf), 0)) == -1)
-		{
-			write(2, "Error sending results!\n", 23);
-			close(cs);
-			return (0);
-		}*/
+		else if (!scmp(buf, "get", 3))
+			interpret_get(cs, buf);
 	}
 	close(cs);
 	return (1);
@@ -113,7 +134,6 @@ int				main(int ac, char **av)
 			handle_client(cs);
 			exit(0);
 		}
-		close(cs);
 	}
 	close(sock);
 	return (1);

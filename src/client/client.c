@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <fcntl.h>
 #include "client.h"
 #include "shared.h"
 
@@ -21,23 +22,26 @@ int				create_client(char *addr, int port)
 		return (-1);
 	sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
 	sin.sin_family = AF_INET;
-	sin.sin_port = htons(port); // host to network short
+	sin.sin_port = htons(port);
 	if (!scmp(addr, "localhost", 9))
-		sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+		sin.sin_addr.s_addr = inet_addr(LOCALHOST_ADDR);
 	else
 		sin.sin_addr.s_addr = inet_addr(addr);
 	if (connect(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
-		error("Connect error !\n");
+		error(CO_FAILED);
 	return (sock);
 }
 
 inline static void		bufset(char *buf)
 {
-	int			i;
+	size_t		i;
 
-	i = -1;
-	while (++i < BUFS)
+	i = 0;
+	while (i < BUFS)
+	{
 		buf[i] = '\0';
+		i++;
+	}
 }
 
 void			interpret_ls(int *sock, char *cmd)
@@ -47,7 +51,7 @@ void			interpret_ls(int *sock, char *cmd)
 	int const		cmd_size = slen(cmd);
 
 	if (write(*sock, cmd, cmd_size) == -1)
-		close(*sock), error("ERROR\n");
+		close(*sock), error(REQ_ERR);
 	else
 	{
 		while (42)
@@ -55,9 +59,9 @@ void			interpret_ls(int *sock, char *cmd)
 			bufset(buf);
 			r = recv(*sock, buf, BUFS - 1, 0);
 			if (r == -1)
-				close(*sock), error("ERROR: failed to receive data\n");
+				close(*sock), error(REC_ERR);
 			else if (!r)
-				error("ERROR: Connexion closed!\n");
+				error(CO_CLOSED);
 			if (!buf[0])
 				break;
 			write(1, buf, slen(buf));
@@ -75,9 +79,48 @@ void			interpret_cd(int *sock, char *cmd)
 
 void			interpret_get(int *sock, char *cmd)
 {
-	(void)sock;
-	(void)cmd;
-	printf("get\n");
+	int const		cmd_size = slen(cmd);
+	char			buf[BUFS];
+	int				r;
+	int				fd;
+	char			**cmd_args;
+	int				bytes;
+	int				len;
+
+	cmd_args = ssplit(cmd, ' ');
+	if (alen(cmd_args) <= 1)
+	{
+		afree(cmd_args), printf(ARG_ERR);
+		return ;
+	}
+	if ((fd = open(cmd_args[1], O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
+	{
+		afree(cmd_args), printf(OPEN_ERR);
+		return ;
+	}
+	if (write(*sock, cmd, cmd_size) == -1)
+		afree(cmd_args), close(*sock), error(REQ_ERR);
+	else
+	{
+		bytes = 0;
+		while (42)
+		{
+			bufset(buf);
+			r = recv(*sock, buf, BUFS - 1, 0);
+			if (r == -1)
+				close(*sock), error(REC_ERR);
+			else if (!r)
+				error(CO_CLOSED);
+			if (!buf[0])
+				break;
+			len = slen(buf);
+			bytes += len;
+			write(fd, buf, len);
+		}
+		close(fd);
+		printf("SUCCESS: received %d bytes from server\n", bytes);
+		afree(cmd_args);
+	}
 }
 
 void			interpret_put(int *sock, char *cmd)
@@ -124,7 +167,7 @@ void			interpret_command(int sock, char *cmd)
 			return;
 		}
 	}
-	printf("ftp: command not found: %s\n", cmd);
+	printf(CMD_NOT_FOUND, cmd);
 }
 
 int				loop(int sock)
