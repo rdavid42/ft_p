@@ -6,18 +6,18 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:57:59 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/17 19:12:12 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHARED_H
 # define SHARED_H
 
-# define READ_BUFS		16384
-# define BUFS			16384
-# define GET_BUFS		512
-
 # include <stddef.h>
+
+# define READ_BUFS		(16384)
+# define BUFS			(16384)
+# define GET_BUFS		(512)
 
 int				slen(char const *s);
 int				error(char const *msg);
