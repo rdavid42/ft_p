@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:50:18 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 11:17:33 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/18 17:02:29 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@
 # define REQ_ERR			("ERROR: failed to send request!\n")
 # define REC_ERR			("ERROR: failed to receive data!\n")
 # define CO_CLOSED			("ERROR: connexion closed!\n")
-# define OPEN_ERR			("ERROR: failed to open file!\n")
 # define CO_FAILED			("ERROR: connexion failed!\n")
 # define ARG_ERR1			("ERROR: not enough arguments!\n")
 # define ARG_ERR2			("ERROR: too many arguments!\n")
 # define CMD_NOT_FOUND		("ERROR: command not found: %s\n")
-# define FILE_EXIST			("ERROR: file already exists!\n")
 # define FILE_NOT_FOUND		("ERROR: file not found!\n")
 # define PERM_DENIED		("ERROR: permission denied!\n")
 # define NO_SUCH_DIR		("ERROR: no such directory!\n")

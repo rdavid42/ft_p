@@ -6,10 +6,11 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:58 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 20:08:23 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/18 17:25:06 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -27,7 +28,7 @@ int				get(int *cs, char *cmd)
 	cmd_args = ssplit(cmd, ' ');
 	if (!(file = read_file(cmd_args[1], &len)))
 		len = -1;
-	if (send(*cs, (void *)&len, sizeof(len), 0) == -1)
+	if (send(*cs, (void *)&len, sizeof(uint32_t), 0) == -1)
 		return (afree(cmd_args), 0);
 	if (len >= 0)
 	{

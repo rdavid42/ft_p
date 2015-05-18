@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 20:25:33 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/18 17:43:37 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,16 @@
 
 # include <stddef.h>
 
-# define READ_BUFS		(16384)
-# define BUFS			(16384)
-# define GET_BUFS		(512)
+# define OPEN_ERR			("ERROR: failed to open file!\n")
+# define FILE_EXIST			("ERROR: file already exists!\n")
+# define REC_ERR			("ERROR: failed to receive data!\n")
+# define CO_CLOSED			("ERROR: connexion closed!\n")
+# define FILE_NOT_FOUND		("ERROR: file not found!\n")
+# define PERM_DENIED		("ERROR: permission denied!\n")
+
+# define READ_BUFS			(16384)
+# define BUFS				(16384)
+# define GET_BUFS			(512)
 
 int				slen(char const *s);
 int				error(char const *msg);

@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get.c                                              :+:      :+:    :+:   */
+/*   put.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 18:24:16 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/18 13:27:51 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/18 18:30:52 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
 #include <stdio.h>
-#include <fcntl.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <stdint.h>
 #include <sys/socket.h>
+#include "server.h"
 #include "shared.h"
-#include "client.h"
 
 inline static void	bufset(char *buf, size_t bufs)
 {
@@ -30,18 +30,7 @@ inline static void	bufset(char *buf, size_t bufs)
 	}
 }
 
-static int			check_errors(char **cmd_args, int *fd)
-{
-	if (alen(cmd_args) <= 1)
-		return (afree(cmd_args), err_msg(ARG_ERR1), 0);
-	if (alen(cmd_args) > 2)
-		return (afree(cmd_args), err_msg(ARG_ERR2), 0);
-	if ((*fd = open(cmd_args[1], O_RDONLY, 0644)) != -1)
-		return (afree(cmd_args), err_msg(FILE_EXIST), 0);
-	return (1);
-}
-
-static int			write_streaming_packets(int *sock, int fd,
+static int			write_streaming_packets(int *cs, int fd,
 											char **cmd_args, int *len)
 {
 	int				i;
@@ -52,14 +41,15 @@ static int			write_streaming_packets(int *sock, int fd,
 	while (i < *len)
 	{
 		bufset(c, GET_BUFS);
-		r = recv(*sock, c, GET_BUFS, 0);
+		r = recv(*cs, c, GET_BUFS, 0);
 		if (r == -1)
-			afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
+			afree(cmd_args), close(fd), close(*cs), error(REC_ERR);
 		else if (!r)
-			afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
+			afree(cmd_args), close(fd), close(*cs), error(CO_CLOSED);
 		(void)!write(fd, c, *len - i < GET_BUFS ? *len - i : GET_BUFS);
 		i += GET_BUFS;
 	}
+	printf("Received %d bytes from client %d\n", *len, *cs);
 	return (1);
 }
 
@@ -79,27 +69,41 @@ static int			receive_file_header(int *sock, char **cmd_args, int *len)
 	return (1);
 }
 
-int					get(int *sock, char *cmd)
+static int				check_errors(int *cs, char **cmd_args)
 {
-	int				fd;
-	char			**cmd_args;
-	int				len;
+	int					ret;
+	int					fd;
+
+	if ((fd = open(cmd_args[1], O_RDONLY, 0644)) != -1)
+	{
+		afree(cmd_args);
+		ret = -1;
+		send(*cs, (void *)&ret, sizeof(uint32_t), 0);
+		return (0);
+	}
+	close(fd);
+	return (1);
+}
+
+int						put(int *cs, char *cmd)
+{
+	int					fd;
+	char				**cmd_args;
+	int					len;
+	int					ret;
 
 	cmd_args = ssplit(cmd, ' ');
-	if (!check_errors(cmd_args, &fd))
+	if (!check_errors(cs, cmd_args))
 		return (0);
-	if (write(*sock, cmd, slen(cmd)) == -1)
-		afree(cmd_args), close(fd), close(*sock), error(REQ_ERR);
-	else
-	{
-		if (!receive_file_header(sock, cmd_args, &len))
-			return (afree(cmd_args), 0);
-		if ((fd = open(cmd_args[1], O_RDWR | O_CREAT, 0644)) == -1)
-			return (afree(cmd_args), err_msg(OPEN_ERR), 0);
-		write_streaming_packets(sock, fd, cmd_args, &len);
-		close(fd);
-		printf("SUCCESS: received %d bytes from server\n", len);
-		afree(cmd_args);
-	}
+	ret = 0, send(*cs, (void *)&ret, sizeof(uint32_t), 0);
+	if (!receive_file_header(cs, cmd_args, &len))
+		return (afree(cmd_args), 0);
+	if ((fd = open(cmd_args[1], O_RDWR | O_CREAT, 0644)) == -1)
+		return (afree(cmd_args), err_msg(OPEN_ERR), 0);
+	write_streaming_packets(cs, fd, cmd_args, &len);
+	close(fd);
+	afree(cmd_args);
+	if (ret = 1, send(*cs, (void *)&ret, sizeof(uint32_t), 0) == -1)
+		return (0);
 	return (1);
 }

@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 17:26:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 15:34:22 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/18 18:17:12 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/18 18:18:02 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
-#include "server.h"
-#include "shared.h"
-
-int				main(int ac, char **av)
+int				pwd(char *root, int *cs, char *cmd)
 {
-	int						port;
-	int						sock;
-
-	if (ac != 2)
-		usage(av[0]);
-	port = stoi(av[1]);
-	sock = create_server(port);
-	server_loop(sock);
-	close(sock);
+	(void)root;
+	(void)cs;
+	(void)cmd;
 	return (1);
 }
