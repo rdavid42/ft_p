@@ -6,16 +6,22 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 15:06:25 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 17:53:07 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/18 12:08:02 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <unistd.h>
 
 int				slen(char const *s)
 {
 	int			i;
 
 	i = 0;
+	write(2, "-7\n", 3);
 	while (s[i] != '\0')
+	{
+		write(2, "-8\n", 3);
 		i++;
+	}
 	return (i);
 }

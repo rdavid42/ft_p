@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:03:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 23:51:18 by ryd              ###   ########.fr       */
+/*   Updated: 2015/05/18 11:20:36 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,14 @@ int				cd(int *sock, char *cmd)
 			close(*sock), error(REC_ERR);
 		else if (!r)
 			error(CO_CLOSED);
-		if (ret == -1)
+		if (ret == 0)
+			return ((void)!write(1, "SUCCESS\n", 9), 1);
+		else if (ret == -1)
 			return (err_msg(PERM_DENIED), 0);
-		(void)!write(1, "SUCCESS\n", 9);
+		else if (ret == -2)
+			return (err_msg(CO_CLOSED), 0);
+		else if (ret == -3)
+			return (err_msg(NO_SUCH_DIR), 0);
 	}
 	return (1);
 }
