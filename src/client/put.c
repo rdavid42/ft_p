@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:04:19 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 18:34:00 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 09:29:44 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/socket.h>
+#include <dirent.h>
 #include "client.h"
 #include "shared.h"
 
@@ -39,12 +40,18 @@ static int		send_packets(int *len, int *sock, char *file, char **cmd_args)
 
 static int		check_errors(char **cmd_args)
 {
+	int			fd;
+	DIR			*dir;
+
 	if (alen(cmd_args) > 2)
 		return (err_msg(ARG_ERR2), 0);
 	if (alen(cmd_args) < 2)
 		return (err_msg(ARG_ERR1), 0);
-	if (open(cmd_args[1], O_RDONLY) == -1)
+	if ((fd = open(cmd_args[1], O_RDONLY)) == -1)
 		return (err_msg(FILE_NOT_FOUND), 0);
+	if ((dir = opendir(cmd_args[1])))
+		return (closedir(dir), err_msg(FILE_NOT_FOUND), 0);
+	close(fd);
 	return (1);
 }
 
@@ -86,7 +93,7 @@ int				put(int *sock, char *cmd)
 	if (len >= 0)
 	{
 		if (!send_packets(&len, sock, file, cmd_args))
-			return (0);
+			return (afree(cmd_args), 0);
 	}
 	if (receive_server_response(sock, cmd_args))
 		return (printf("SUCCESS: Sent %d bytes to server!\n", len), 0);

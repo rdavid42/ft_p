@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/18 18:17:12 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 07:07:18 by ryd              ###   ########.fr       */
+/*   Updated: 2015/05/19 08:44:46 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdint.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -27,8 +28,12 @@ int					pwd(char *root, int *cs, char *cmd)
 	if (!scmp(cur, root, slen(root)))
 	{
 		ret = clen - rlen;
+		ret = ret <= 0 ? 1 : ret;
 		send(*cs, (void *)&ret, sizeof(uint32_t), 0);
-		send(*cs, cur + rlen, ret, 0);
+		if (ret > 1)
+			send(*cs, cur + rlen, ret, 0);
+		else
+			send(*cs, "/", 1, 0);
 	}
 	return (1);
 }

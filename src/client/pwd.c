@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:04:48 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 07:06:04 by ryd              ###   ########.fr       */
+/*   Updated: 2015/05/19 08:48:11 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -41,6 +42,7 @@ int				pwd(int *sock, char *cmd)
 	check_recv(r, sock);
 	(void)!write(1, pwd, pwd_size);
 	(void)!write(1, "\n", 1);
+	(void)!write(1, "SUCCESS\n", 9);
 	free(pwd);
 	return (1);
 }
