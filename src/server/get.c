@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:58 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 18:02:47 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 20:33:03 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,36 @@
 #include "shared.h"
 #include "server.h"
 
+static int		send_packets(int *cs, char *file, int *len, int *id)
+{
+	int			t;
+	int			n;
+	int			i;
+
+	(void)n;
+	i = 0;
+	while (i < *len)
+	{
+		t = *len - i < GET_BUFS ? *len - i : GET_BUFS;
+		n = 0;
+		while (n != t)
+		{
+			if ((n = send(*cs, file + i, t, 0)) == -1)
+				return (free(file), 0);
+			t -= n;
+			n = 0;
+		}
+		i += GET_BUFS;
+	}
+	free(file), printf("Sent %d bytes to client %d\n", *len, *id);
+	return (1);
+}
+
 int				get(char *root, int *cs, char *cmd, int *id)
 {
 	char		**cmd_args;
 	char		*file;
 	int			len;
-	int			i;
-	int			t;
 
 	(void)root, cmd_args = ssplit(cmd, ' ');
 	if (!(file = read_file(cmd_args[1], &len)))
@@ -33,15 +56,8 @@ int				get(char *root, int *cs, char *cmd, int *id)
 		return (afree(cmd_args), 0);
 	if (len >= 0)
 	{
-		i = 0;
-		while (i < len)
-		{
-			t = len - i < GET_BUFS ? len - i : GET_BUFS;
-			if (send(*cs, file + i, t, 0) == -1)
-				return (free(file), afree(cmd_args), 0);
-			i += GET_BUFS;
-		}
-		free(file), printf("Sent %d bytes to client %d\n", len, *id);
+		if (!send_packets(cs, file, &len, id))
+			return (0);
 	}
 	afree(cmd_args);
 	return (1);

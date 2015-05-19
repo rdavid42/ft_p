@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 12:13:54 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 20:49:43 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,27 @@ static int			write_streaming_packets(int *sock, int fd,
 	int				i;
 	char			c[GET_BUFS];
 	int				r;
+	int				t;
 
 	i = 0;
 	while (i < *len)
 	{
+		t = *len - i < GET_BUFS ? *len - i : GET_BUFS;
 		bufset(c, GET_BUFS);
-		r = recv(*sock, c, GET_BUFS, 0);
-		if (r == -1)
-			afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
-		else if (!r)
-			afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
-		(void)!write(fd, c, *len - i < GET_BUFS ? *len - i : GET_BUFS);
+		while (r = 0, r != t)
+		{
+			r = recv(*sock, c, t, 0);
+			if (r == -1)
+				afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
+			else if (!r)
+				afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
+			if (r != t)
+				printf("Received %d/%d bytes from packet %d\n", r, t, i / GET_BUFS);
+			(void)!write(fd, c, r);
+			t -= r;
+			// if (!t)
+				// printf("Received all bytes from packet %d\n", i / GET_BUFS);
+		}
 		i += GET_BUFS;
 	}
 	return (1);
