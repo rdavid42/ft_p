@@ -1,41 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ls.c                                               :+:      :+:    :+:   */
+/*   lls.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/17 18:40:30 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:35:55 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/19 09:31:08 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/19 09:40:28 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/wait.h>
-#include <stdio.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include "shared.h"
-#include "server.h"
+#include "client.h"
 
-int				ls(int *cs, char *cmd)
+int				lls(int *sock, char *cmd)
 {
-	pid_t					pid;
-	pid_t					tpid;
+	pid_t		pid;
+	pid_t		tpid;
 
+	(void)sock;
 	pid = fork();
 	if (pid == -1)
-		error("Fork error !\n");
+		error(FORK_ERR);
 	if (pid == 0)
-	{
-		dup2(*cs, 0), dup2(*cs, 1), dup2(*cs, 2);
 		execv("/bin/ls", ssplit(cmd, ' '));
-	}
 	else
 	{
 		tpid = wait4(pid, NULL, 0, NULL);
 		while (tpid != pid)
 			tpid = wait4(pid, NULL, 0, NULL);
-		(void)!write(*cs, "\0", 1);
-		printf("Sent ls results to client %d\n", *cs);
 	}
 	return (1);
 }

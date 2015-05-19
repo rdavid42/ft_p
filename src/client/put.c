@@ -6,10 +6,11 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:04:19 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:29:44 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 09:46:46 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -55,7 +56,7 @@ static int		check_errors(char **cmd_args)
 	return (1);
 }
 
-static int		receive_server_response(int *sock, char **cmd_args)
+static int		receive_server_response(int *sock, char **cmd_args, char *file)
 {
 	int			r;
 	int			ret;
@@ -69,7 +70,11 @@ static int		receive_server_response(int *sock, char **cmd_args)
 	if (ret == -1)
 		return (err_msg(FILE_EXIST), 0);
 	if (ret == 1)
-		return (1);
+	{
+		if (file)
+			free(file);
+		return (afree(cmd_args), 1);
+	}
 	return (1);
 }
 
@@ -84,19 +89,20 @@ int				put(int *sock, char *cmd)
 		return (afree(cmd_args), 0);
 	if (write(*sock, cmd, slen(cmd)) == -1)
 		afree(cmd_args), close(*sock), error(REQ_ERR);
-	if (!receive_server_response(sock, cmd_args))
+	if (!receive_server_response(sock, cmd_args, NULL))
 		return (afree(cmd_args), 0);
 	if (!(file = read_file(cmd_args[1], &len)))
 		len = -1;
 	if (send(*sock, (void *)&len, sizeof(uint32_t), 0) == -1)
-		return (afree(cmd_args), 0);
+		return (free(file), afree(cmd_args), 0);
 	if (len >= 0)
 	{
 		if (!send_packets(&len, sock, file, cmd_args))
-			return (afree(cmd_args), 0);
+			return (free(file), 0);
 	}
-	if (receive_server_response(sock, cmd_args))
+	if (receive_server_response(sock, cmd_args, file))
 		return (printf("SUCCESS: Sent %d bytes to server!\n", len), 0);
 	afree(cmd_args);
+	free(file);
 	return (1);
 }
