@@ -6,13 +6,14 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 16:37:03 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 18:24:12 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHARED_H
 # define SHARED_H
 
+# include <stdint.h>
 # include <stddef.h>
 
 # define OPEN_ERR			("ERROR: failed to open file!\n")
