@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:35:14 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 16:37:03 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 # define READ_BUFS			(16384)
 # define BUFS				(16384)
-# define GET_BUFS			(512)
+# define GET_BUFS			(128)
 
 int				slen(char const *s);
 int				error(char const *msg);
@@ -42,5 +42,6 @@ char			*read_file(char const *filename, int *len);
 int				stoi(const char *str);
 void			err_msg(char const *msg);
 char			*sjoin(char const *s, char const *s2);
+char			*sdup(const char *s1);
 
 #endif

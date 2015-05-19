@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:50:18 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 13:07:45 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 16:25:15 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct				s_cmd
 {
 	int						len;
 	char const				*name;
-	int						(*interpret)(int *, char *cmd);
+	int						(*interpret)(int *, char *);
 }							t_cmd;
 
 void						usage(char *s);

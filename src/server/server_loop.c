@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:53:52 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 12:22:46 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 16:34:28 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,22 +55,26 @@ int							server_loop(int sock)
 {
 	int						cs;
 	pid_t					pid;
-	char const				*root = get_root();
+	char					*root;
+	static int				id = 0;
 
 	g_except = 0;
+	root = sdup(get_root());
 	catch_signals();
 	while (42)
 	{
 		if (!accept_client(&cs, &sock))
 			return (0);
 		pid = fork();
+		id++;
 		if (pid == -1)
 			error("Fork error !\n");
 		if (pid == 0)
 		{
 			close(sock);
-			handle_client((char *)root, cs);
+			handle_client((char *)root, cs, id);
 			exit(0);
 		}
+		close(cs);
 	}
 }

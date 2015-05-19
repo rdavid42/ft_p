@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   catch_signals.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/05/19 13:11:59 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/19 14:02:25 by rdavid           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -31,4 +42,7 @@ void					catch_signals(void)
 	signal(SIGTERM, s_exit_success);
 	signal(SIGHUP, s_exit_success);
 	signal(SIGSEGV, s_exit_error);
+	signal(SIGBUS, s_exit_error);
+	signal(SIGFPE, s_exit_error);
+	signal(SIGABRT, s_exit_success);
 }

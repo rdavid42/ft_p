@@ -6,10 +6,11 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:44:06 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 12:53:48 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 16:19:21 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -53,11 +54,12 @@ static void				go_dir(int *cs, char *root,
 	free(t[1]);
 }
 
-int						cd(char *root, int *cs, char *cmd)
+int						cd(char *root, int *cs, char *cmd, int *id)
 {
 	char				**arg;
 	char const			*cur = get_cwd();
 
+	(void)id;
 	arg = ssplit(cmd, ' ');
 	if (scmp(root, cur, slen(root)) != 0)
 		return (afree(arg), sc(cs, -2), error(CWD_DENIED), 0);

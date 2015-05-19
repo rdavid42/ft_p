@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:50:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 11:11:54 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 16:35:53 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,29 +25,33 @@ inline static void			bufset(char *buf)
 		buf[i] = '\0';
 }
 
-int							interpret_command(char *root, int *cs, char *cmd)
+int							interpret_command(char *root, int *cs,
+											char *cmd, int *id)
 {
-	if (!scmp(cmd, "ls", 2))
-		ls(cs, cmd);
-	else if (!scmp(cmd, "get", 3))
-		get(cs, cmd);
-	else if (!scmp(cmd, "cd", 2))
-		cd(root, cs, cmd);
-	else if (!scmp(cmd, "put", 3))
-		put(cs, cmd);
-	else if (!scmp(cmd, "pwd", 3))
-		pwd(root, cs, cmd);
-	else if (!scmp(cmd, "quit", 4))
-		quit(cs, cmd);
+	int						i;
+	static t_cmd const		cmds[CMDS] = {
+
+	{ 2, "ls", ls }, { 2, "cd", cd }, { 3, "get", get },
+	{ 3, "put", put }, { 3, "pwd", pwd }, { 4, "quit", quit } };
+	i = -1;
+	while (++i < CMDS)
+	{
+		if (!scmp(cmds[i].name, cmd, cmds[i].len)
+			&& (cmd[cmds[i].len] == ' ' || !cmd[cmds[i].len]))
+		{
+			cmds[i].interpret(root, cs, cmd, id);
+			return (1);
+		}
+	}
 	return (1);
 }
 
-int							handle_client(char *root, int cs)
+int							handle_client(char *root, int cs, int id)
 {
 	int						r;
 	char					buf[BUFS];
 
-	printf("Connexion to client %d established!\n", cs);
+	printf("Connexion to client %d established!\n", id);
 	while (42)
 	{
 		bufset(buf);
@@ -55,9 +59,9 @@ int							handle_client(char *root, int cs)
 		if (r == -1)
 			close(cs), error("Read error !\n");
 		else if (!r)
-			return (close(cs), printf("Connexion to client %d closed!\n", cs));
+			return (close(cs), printf("Connexion to client %d closed!\n", id));
 		buf[r] = '\0';
-		interpret_command(root, &cs, buf);
+		interpret_command(root, &cs, buf, &id);
 	}
 	close(cs);
 	return (1);

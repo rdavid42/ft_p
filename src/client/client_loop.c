@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:07:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 13:07:59 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 13:58:59 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include "client.h"
 #include "shared.h"
 
-inline static char			*get_root(void)
+inline static char		*get_root(void)
 {
-	char					buf[1024];
+	char				buf[1024];
 
 	return (getcwd(buf, 1024));
 }
@@ -39,8 +39,9 @@ int						client_loop(int sock)
 	char				*cmd;
 	char				buf[BUFS];
 	int					r;
-	char				*root = get_root();
+	char				*root;
 
+	root = get_root();
 	catch_signals();
 	while (42)
 	{
