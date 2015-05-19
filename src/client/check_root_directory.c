@@ -25,7 +25,7 @@ int						check_root_directory(char *root)
 			(void)!write(1, "Failed to recreate current directory!\n", 38);
 			return (0);
 		}
-		chdir(root);
+		(void)!chdir(root);
 		(void)!write(1, "Current directory recreated!\n", 29);
 		return (1);
 	}
