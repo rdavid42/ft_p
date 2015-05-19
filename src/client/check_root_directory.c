@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lls.c                                              :+:      :+:    :+:   */
+/*   check_root_directory.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/19 09:31:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 10:23:08 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/19 12:52:00 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/19 12:53:56 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <sys/wait.h>
-#include "shared.h"
-#include "client.h"
+#include <sys/stat.h>
+#include <dirent.h>
 
-int				lls(int *sock, char *cmd)
+int						check_root_directory(char *root)
 {
-	pid_t		pid;
-	pid_t		tpid;
+	DIR					*dir;
 
-	(void)sock;
-	pid = fork();
-	if (pid == -1)
-		error(FORK_ERR);
-	if (pid == 0)
-		execv("/bin/ls", ssplit(cmd, ' '));
-	else
+	if (!(dir = opendir(root)))
 	{
-		tpid = wait4(pid, NULL, 0, NULL);
-		while (tpid != pid)
-			tpid = wait4(pid, NULL, 0, NULL);
+		if (mkdir(root, 0755) == -1)
+		{
+			(void)!write(1, "Failed to recreate current directory!\n", 38);
+			return (0);
+		}
+		chdir(root);
+		(void)!write(1, "Current directory recreated!\n", 29);
+		return (1);
 	}
+	closedir(dir);
 	return (1);
 }

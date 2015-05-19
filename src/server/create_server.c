@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:48:13 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/17 18:49:32 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 12:14:22 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int				create_server(int port)
 	struct protoent		*proto;
 	struct sockaddr_in	sin;
 	int					sock;
+	int					reuse;
 
 	proto = getprotobyname("tcp");
 	if (!proto)
@@ -29,6 +30,9 @@ int				create_server(int port)
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+	reuse = 1;
+	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1)
+		error("Setsockopt error!\n");
 	if (bind(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
 		error(BIND_ERR);
 	listen(sock, 42);

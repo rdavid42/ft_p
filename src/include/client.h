@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:50:18 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:38:15 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 13:07:45 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,7 @@ int							lcd(int *sock, char *cmd);
 int							create_client(char *addr, int port);
 int							client_loop(int sock);
 void						interpret_command(int sock, char *cmd);
+int							check_root_directory(char *root);
+void						catch_signals(void);
 
 #endif

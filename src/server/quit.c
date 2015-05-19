@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lls.c                                              :+:      :+:    :+:   */
+/*   quit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/19 09:31:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 10:23:08 by rdavid           ###   ########.fr       */
+/*   Created: 2015/05/19 11:01:14 by rdavid            #+#    #+#             */
+/*   Updated: 2015/05/19 11:31:37 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/socket.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <sys/wait.h>
-#include "shared.h"
-#include "client.h"
 
-int				lls(int *sock, char *cmd)
+int					quit(int *cs, char *cmd)
 {
-	pid_t		pid;
-	pid_t		tpid;
+	char			r;
 
-	(void)sock;
-	pid = fork();
-	if (pid == -1)
-		error(FORK_ERR);
-	if (pid == 0)
-		execv("/bin/ls", ssplit(cmd, ' '));
-	else
-	{
-		tpid = wait4(pid, NULL, 0, NULL);
-		while (tpid != pid)
-			tpid = wait4(pid, NULL, 0, NULL);
-	}
+	r = 1;
+	send(*cs, (void *)&r, sizeof(char), 0);
+	close(*cs);
+	exit(0);
+	(void)cmd;
 	return (1);
 }

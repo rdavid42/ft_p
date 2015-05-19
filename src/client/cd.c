@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:03:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:59:35 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 12:10:58 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int					cd(int *sock, char *cmd)
 		else if (ret == -1)
 			return (err_msg(PERM_DENIED), 0);
 		else if (ret == -2)
-			return (err_msg(CO_CLOSED), 0);
+			return (error(CO_CLOSED), 0);
 		else if (ret == -3)
 			return (err_msg(NO_SUCH_DIR), 0);
 	}

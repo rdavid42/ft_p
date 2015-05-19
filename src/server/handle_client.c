@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:50:07 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 18:19:21 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 11:11:54 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int							interpret_command(char *root, int *cs, char *cmd)
 		put(cs, cmd);
 	else if (!scmp(cmd, "pwd", 3))
 		pwd(root, cs, cmd);
+	else if (!scmp(cmd, "quit", 4))
+		quit(cs, cmd);
 	return (1);
 }
 

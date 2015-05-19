@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:30 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:35:55 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 11:41:41 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int				ls(int *cs, char *cmd)
 	pid = fork();
 	if (pid == -1)
 		error("Fork error !\n");
+	g_except = 1;
 	if (pid == 0)
 	{
 		dup2(*cs, 0), dup2(*cs, 1), dup2(*cs, 2);

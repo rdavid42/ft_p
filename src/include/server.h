@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 13:39:27 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 18:18:23 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 11:41:46 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # define ROOT_DIR_DENIED	("ERROR: root directory denied!\n")
 # define CWD_DENIED			("ERROR: current directory denied!")
 
+int							g_except;
+
 int							create_server(int port);
 void						usage(char *s);
 int							ls(int *cs, char *cmd);
@@ -24,6 +26,7 @@ int							get(int *cs, char *cmd);
 int							cd(char *root, int *cs, char *cmd);
 int							put(int *cs, char *cmd);
 int							pwd(char *root, int *cs, char *cmd);
+int							quit(int *cs, char *cmd);
 int							create_server(int port);
 int							handle_client(char *root, int cs);
 int							server_loop(int sock);
