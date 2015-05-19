@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:58 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:51:26 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 09:56:28 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ int				get(int *cs, char *cmd)
 				return (free(file), afree(cmd_args), 0);
 			i += GET_BUFS;
 		}
-		free(file);
-		printf("Sent %d bytes to client %d\n", len, *cs);
+		free(file), printf("Sent %d bytes to client %d\n", len, *cs);
 	}
 	afree(cmd_args);
 	return (1);

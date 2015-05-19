@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/18 18:17:12 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 08:44:46 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 09:58:15 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 int					pwd(char *root, int *cs, char *cmd)
 {
 	char			buf[1024];
-	char			*cur = getcwd(buf, 1024);
+	char const		*cur = getcwd(buf, 1024);
 	int const		rlen = slen(root);
 	int const		clen = slen(cur);
 	int				ret;

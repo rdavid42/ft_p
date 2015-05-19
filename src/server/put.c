@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/18 13:27:51 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 18:30:52 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 09:58:56 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ static int			receive_file_header(int *sock, char **cmd_args, int *len)
 	return (1);
 }
 
-static int				check_errors(int *cs, char **cmd_args)
+static int			check_errors(int *cs, char **cmd_args)
 {
-	int					ret;
-	int					fd;
+	int				ret;
+	int				fd;
 
 	if ((fd = open(cmd_args[1], O_RDONLY, 0644)) != -1)
 	{
@@ -85,12 +85,12 @@ static int				check_errors(int *cs, char **cmd_args)
 	return (1);
 }
 
-int						put(int *cs, char *cmd)
+int					put(int *cs, char *cmd)
 {
-	int					fd;
-	char				**cmd_args;
-	int					len;
-	int					ret;
+	int				fd;
+	char			**cmd_args;
+	int				len;
+	int				ret;
 
 	cmd_args = ssplit(cmd, ' ');
 	if (!check_errors(cs, cmd_args))

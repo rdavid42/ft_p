@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryd <ryd@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:03:08 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 07:09:21 by ryd              ###   ########.fr       */
+/*   Updated: 2015/05/19 09:59:35 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 #include "shared.h"
 #include "client.h"
 
-int				check_args(char *cmd)
+int					check_args(char *cmd)
 {
-	char		**cmd_args;
-	int			len;
+	char			**cmd_args;
+	int				len;
 
 	cmd_args = ssplit(cmd, ' ');
 	len = alen(cmd_args);
@@ -29,7 +29,7 @@ int				check_args(char *cmd)
 	return (afree(cmd_args), 1);
 }
 
-int				cd(int *sock, char *cmd)
+int					cd(int *sock, char *cmd)
 {
 	int const		cmd_size = slen(cmd);
 	int				r;
@@ -41,7 +41,6 @@ int				cd(int *sock, char *cmd)
 		return (close(*sock), error(REC_ERR));
 	else
 	{
-		ret = 0;
 		r = recv(*sock, (void *)&ret, sizeof(int), 0);
 		if (r == -1)
 			close(*sock), error(REC_ERR);
