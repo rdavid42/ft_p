@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/19 13:11:59 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 17:07:03 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 18:46:21 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 #include <stdlib.h>
 #include <signal.h>
 #include "shared.h"
-
-static void				s_ignore(int sig)
-{
-	(void)sig;
-}
 
 static void				s_exit_error(int sig)
 {
@@ -36,9 +31,9 @@ static void				s_exit_success(int sig)
 
 void					catch_signals(void)
 {
-	signal(SIGINT, s_ignore);
+	signal(SIGINT, s_exit_success);
 	signal(SIGKILL, s_exit_success);
-	signal(SIGQUIT, s_ignore);
+	signal(SIGQUIT, s_exit_success);
 	signal(SIGTERM, s_exit_success);
 	signal(SIGHUP, s_exit_success);
 	signal(SIGSEGV, s_exit_error);
