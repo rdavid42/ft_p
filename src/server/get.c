@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:58 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 20:33:03 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 21:51:48 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,15 @@ static int		send_packets(int *cs, char *file, int *len, int *id)
 	int			n;
 	int			i;
 
-	(void)n;
 	i = 0;
 	while (i < *len)
 	{
 		t = *len - i < GET_BUFS ? *len - i : GET_BUFS;
-		n = 0;
-		while (n != t)
+		while (n = 0, n != t)
 		{
 			if ((n = send(*cs, file + i, t, 0)) == -1)
 				return (free(file), 0);
 			t -= n;
-			n = 0;
 		}
 		i += GET_BUFS;
 	}

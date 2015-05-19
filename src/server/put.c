@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/18 13:27:51 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 16:16:57 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 21:56:17 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,23 @@ static int			write_streaming_packets(int *cs, int fd,
 	int				i;
 	char			c[GET_BUFS];
 	int				r;
+	int				t;
 
 	i = 0;
 	while (i < *len)
 	{
+		t = *len - i < GET_BUFS ? *len - i : GET_BUFS;
 		bufset(c, GET_BUFS);
-		r = recv(*cs, c, GET_BUFS, 0);
-		if (r == -1)
-			close(fd), close(*cs), error(REC_ERR);
-		else if (!r)
-			close(fd), close(*cs), error(CO_CLOSED);
-		(void)!write(fd, c, *len - i < GET_BUFS ? *len - i : GET_BUFS);
+		while (r = 0, r != t)
+		{
+			r = recv(*cs, c, t, 0);
+			if (r == -1)
+				close(fd), close(*cs), error(REC_ERR);
+			else if (!r)
+				close(fd), close(*cs), error(CO_CLOSED);
+			(void)!write(fd, c, r);
+			t -= r;
+		}
 		i += GET_BUFS;
 	}
 	printf("Received %d bytes from client %d\n", *len, *id);

@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 17:57:22 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 20:49:43 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 21:39:25 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,8 @@ static int			write_streaming_packets(int *sock, int fd,
 				afree(cmd_args), close(fd), close(*sock), error(REC_ERR);
 			else if (!r)
 				afree(cmd_args), close(fd), close(*sock), error(CO_CLOSED);
-			if (r != t)
-				printf("Received %d/%d bytes from packet %d\n", r, t, i / GET_BUFS);
 			(void)!write(fd, c, r);
 			t -= r;
-			// if (!t)
-				// printf("Received all bytes from packet %d\n", i / GET_BUFS);
 		}
 		i += GET_BUFS;
 	}

@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 16:31:00 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 20:58:59 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 21:48:00 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 
 # define READ_BUFS			(16384)
 # define BUFS				(16384)
-# define GET_BUFS			(4096)
+# define GET_BUFS			(8192)
 
 int				slen(char const *s);
 int				error(char const *msg);

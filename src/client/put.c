@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 19:04:19 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 09:48:55 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 21:52:48 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@ static int		send_packets(int *len, int *sock, char *file, char **cmd_args)
 {
 	int			i;
 	int			t;
+	int			n;
 
 	i = 0;
 	while (i < *len)
 	{
 		t = *len - i < GET_BUFS ? *len - i : GET_BUFS;
-		if (send(*sock, file + i, t, 0) == -1)
+		while (n = 0, n != t)
 		{
-			printf("ERROR: failed to send packet <%d>\n", (i / 512) + 1);
-			return (afree(cmd_args), 0);
+			if ((n = send(*sock, file + i, t, 0)) == -1)
+				return (afree(cmd_args), 0);
+			t -= n;
 		}
 		i += GET_BUFS;
 	}
