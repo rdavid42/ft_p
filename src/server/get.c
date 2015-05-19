@@ -6,10 +6,11 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/17 18:40:58 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/18 17:25:06 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/19 09:51:26 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <sys/socket.h>
@@ -37,9 +38,10 @@ int				get(int *cs, char *cmd)
 		{
 			t = len - i < GET_BUFS ? len - i : GET_BUFS;
 			if (send(*cs, file + i, t, 0) == -1)
-				return (afree(cmd_args), 0);
+				return (free(file), afree(cmd_args), 0);
 			i += GET_BUFS;
 		}
+		free(file);
 		printf("Sent %d bytes to client %d\n", len, *cs);
 	}
 	afree(cmd_args);
