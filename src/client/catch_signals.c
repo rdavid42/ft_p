@@ -6,7 +6,7 @@
 /*   By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/19 13:11:59 by rdavid            #+#    #+#             */
-/*   Updated: 2015/05/19 18:46:21 by rdavid           ###   ########.fr       */
+/*   Updated: 2015/05/20 13:13:41 by rdavid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@
 static void				s_exit_error(int sig)
 {
 	(void)sig;
-	err_msg("ERROR: an unknown error occured! :(\n");
+	err_msg("\nERROR: an unknown error occured! :(\n");
 	exit(0);
 }
 
 static void				s_exit_success(int sig)
 {
 	(void)sig;
-	err_msg("Client force closed!\n");
+	err_msg("\nClient force closed!\n");
 	exit(0);
 }
 
