@@ -6,7 +6,7 @@
 #    By: rdavid <rdavid@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/05/17 15:11:22 by rdavid            #+#    #+#              #
-#    Updated: 2015/05/17 17:54:24 by rdavid           ###   ########.fr        #
+#    Updated: 2015/05/21 10:48:14 by rdavid           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,6 @@ clean:
 	@rm -rf $(OBJ_PATH)
 
 fclean: clean
-	@rm -rf $(OBJ_PATH)
 	@rm -f $(SERVER)
 	@rm -f $(CLIENT)
 
